@@ -46,6 +46,8 @@ for idx, line in enumerate(lines):
     measurements.append(measurement)
 print("Finish loading data")
 
+
+
 # Trainning data
 #--------------------------------------#
 X_train = np.array(images)
@@ -59,6 +61,7 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 
 # Create the model
+#--------------------------------------#
 model = Sequential()
 model.add( Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160,320,3)) )
 model.add( Convolution2D(6,5,5,activation='relu') )
