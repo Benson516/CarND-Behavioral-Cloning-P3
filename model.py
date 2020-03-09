@@ -41,7 +41,8 @@ for idx, line in enumerate(lines):
     # image = ndimage.imread(current_path)
     image = imageio.imread(current_path)
     images.append(image)
-    measurement = float(line[3])
+    # measurement = float(line[3])
+    measurement = steering_angle_averaged[idx]
     measurements.append(measurement)
 print("Finish loading data")
 
