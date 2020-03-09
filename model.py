@@ -1,9 +1,14 @@
+import os
 import csv
-import cv2
+# import cv2
 import numpy as np
-from  scipy import ndimage
+# from  scipy import ndimage
+import imageio
 
-data_path = '/opt/carnd_p3/data/'
+# data_path = '/opt/carnd_p3/data/'
+data_path = '~/opt/carnd_p3/data/'
+
+data_path = os.path.expanduser(data_path)
 
 # Data importing
 lines = []
@@ -21,12 +26,13 @@ for idx, line in enumerate(lines):
     filename = source_path.split('/')[-1]
     current_path = data_path + '/IMG/' + filename
     # image = cv2.imread(current_path)
-    image = ndimage.imread(current_path)
+    # image = ndimage.imread(current_path)
+    image = imageio.imread(current_path)
     images.append(image)
     measurement = float(line[3])
     measurements.append(measurement)
 print("Finish loading data")
-    
+
 # Trainning data
 #--------------------------------------#
 X_train = np.array(images)
@@ -47,5 +53,3 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=4)
 
 # Save the model
 model.save('model.h5')
-
-
