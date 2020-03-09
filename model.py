@@ -17,12 +17,23 @@ with open(data_path + 'driving_log.csv') as csvfile:
     for line in reader:
         lines.append(line)
 
+# Delete the first line in lines, since it's not a valid data
+del lines[0]
+
+# Moving averaging for steering angle
+N_h = 1
+N = 2*N_h + 1
+steering_angle_raw = [float(line[3]) for line in lines]
+_result = np.convolve(steering_angle_raw, np.ones((N,))/float(N), mode='full')
+steering_angle_averaged = _result[N_h:(-N_h)]
+print(len(steering_angle_raw))
+print(len(steering_angle_averaged))
+
+
 images = []
 measurements = []
 print("Start loading data...")
 for idx, line in enumerate(lines):
-    if idx == 0:
-        continue
     source_path = line[0]
     filename = source_path.split('/')[-1]
     current_path = data_path + '/IMG/' + filename
