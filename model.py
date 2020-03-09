@@ -19,6 +19,7 @@ with open(data_path + 'driving_log.csv') as csvfile:
 
 images = []
 measurements = []
+print("Start loading data...")
 for idx, line in enumerate(lines):
     if idx == 0:
         continue
@@ -42,8 +43,8 @@ y_train = np.array(measurements)
 #--------------------------------------#
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda
-from Keras.layers.convolutional import Convolution2D
-from Keras.layer.pooling import MaxPooling2D
+from keras.layers.convolutional import Convolution2D
+from keras.layers.pooling import MaxPooling2D
 
 # Create the model
 model = Sequential()
