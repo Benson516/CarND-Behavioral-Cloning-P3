@@ -27,7 +27,7 @@ del samples[0]
 
 #
 # Get a subset of data for rapid testing of the script funtionality
-# num_sample = 100
+# num_sample = 300
 # sklearn.utils.shuffle(samples)
 # samples = samples[:num_sample]
 #
@@ -77,7 +77,7 @@ def generator(sample_list, batch_size=32, data_path="."):
             yield (X_train, y_train)
 
 # The batch generator with augmentaiton
-def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0.1):
+def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0.2):
     # Process the augmentation list
     is_center_flip = "center_flip" in aug_list
     is_right = "right" in aug_list
@@ -112,13 +112,15 @@ def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0
             # Right
             if is_right:
                 image_right = imageio.imread(current_path_right)
-                angle_right = angle_center * ( (1.0-beta) if angle_center > 0.0 else (1.0+beta))
+                # angle_right = angle_center * ( (1.0-beta) if angle_center > 0.0 else (1.0+beta))
+                angle_right = angle_center - beta
                 images.append(image_right)
                 angles.append(angle_right)
             # Left
             if is_left:
                 image_left = imageio.imread(current_path_left)
-                angle_left = angle_center * ( (1.0-beta) if angle_center < 0.0 else (1.0+beta))
+                # angle_left = angle_center * ( (1.0-beta) if angle_center < 0.0 else (1.0+beta))
+                angle_left = angle_center + beta
                 images.append(image_left)
                 angles.append(angle_left)
             #-------------------------------#
@@ -152,6 +154,8 @@ aug_list += ['right']
 aug_list += ['left']
 #
 batch_size = 32
+num_epoch = 5
+#
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
 
@@ -197,7 +201,7 @@ history_object = model.fit_generator( \
                     steps_per_epoch=train_steps_epoch, \
                     validation_data=valid_gen, \
                     validation_steps=valid_steps_epoch, \
-                    epochs=5, verbose=1)
+                    epochs=num_epoch, verbose=1)
 
 # Save the model
 #--------------------------------------#
