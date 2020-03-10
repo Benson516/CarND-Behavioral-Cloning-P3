@@ -27,8 +27,9 @@ del samples[0]
 
 #
 # Get a subset of data for rapid testing of the script funtionality
+# num_sample = 100
 # sklearn.utils.shuffle(samples)
-# samples = samples[:100]
+# samples = samples[:num_sample]
 #
 
 # Moving averaging for steering angle
@@ -158,7 +159,7 @@ ch, row, col = 3, 160, 320 # Original image format
 # Data generator
 #--------------------------------------#
 train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
-valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
+valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path, aug_list=[])
 
 # Train network
 #--------------------------------------#
@@ -166,6 +167,7 @@ from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda, LeakyReLU, Cropping2D
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
+from keras import regularizers
 
 # Create the model
 #--------------------------------------#
@@ -180,16 +182,16 @@ model.add( Convolution2D(16,5,5,activation=None) )
 model.add( LeakyReLU(alpha=0.2) )
 model.add( MaxPooling2D())
 model.add( Flatten() )
-model.add( Dense(120) )
+model.add( Dense(120, kernel_regularizer=regularizers.l2(0.01) ) )
 model.add( LeakyReLU(alpha=0.2) )
-model.add( Dense(84) )
+model.add( Dense(84, kernel_regularizer=regularizers.l2(0.01) ) )
 model.add( LeakyReLU(alpha=0.2) )
 model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
 # model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
 train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
-valid_steps_epoch = np.ceil( aug_multiple*len(validation_samples)/float(batch_size))
+valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 history_object = model.fit_generator( \
                     train_gen, \
                     steps_per_epoch=train_steps_epoch, \
