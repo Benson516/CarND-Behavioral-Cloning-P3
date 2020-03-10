@@ -25,8 +25,10 @@ with open(data_path + 'driving_log.csv') as csvfile:
 # Delete the first element in samples, since it's not a valid data
 del samples[0]
 
+#
 # Get a subset of data for rapid testing of the script funtionality
 # samples = samples[:100]
+#
 
 # Moving averaging for steering angle
 # N_h = 1
