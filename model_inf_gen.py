@@ -49,17 +49,20 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
 
 # The batch generator with augmentaiton
-def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0.2):
+def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", aug_list=[], beta=0.2):
     # Process the augmentation list
     is_center_flip = "center_flip" in aug_list
     is_right = "right" in aug_list
     is_left = "left" in aug_list
     #
+    if yield_size is None:
+        yield_size = int(batch_size*1.5)
+    #
     num_samples = len(sample_list)
     images = []
     angles = []
     while True: # Eternal loop
-        sklearn.utils.shuffle(sample_list)
+        sample_list = sklearn.utils.shuffle(sample_list)
         #
         # Loop over all samples
         for sample in sample_list:
@@ -98,8 +101,10 @@ def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0
             #-------------------------------#
 
             # yield
-            if len(images) >= batch_size:
+            if len(images) >= yield_size:
                 # yield
+                # Shuffle
+                images, angles = sklearn.utils.shuffle(images, angles)
                 # Convert to ndarray
                 X_train = np.array(images[:batch_size])
                 y_train = np.array(angles[:batch_size])
