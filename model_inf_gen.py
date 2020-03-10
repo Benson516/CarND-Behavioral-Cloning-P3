@@ -160,8 +160,10 @@ model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
 # train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
+# valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
+
 train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
-valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
+valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
 history_object = model.fit_generator( \
                     train_gen, \
                     steps_per_epoch=train_steps_epoch, \
