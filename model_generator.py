@@ -74,6 +74,47 @@ def generator(sample_list, batch_size=32, data_path="."):
             # yield sklearn.utils.shuffle(X_train, y_train)
             yield (X_train, y_train)
 
+# The batch generator with augmentaiton
+def generator_aug(sample_list, batch_size=32, data_path="."):
+    num_samples = len(sample_list)
+    while True: # Eternal loop
+        sklearn.utils.shuffle(sample_list)
+        #
+        images = []
+        angles = []
+        # Loop over all samples
+        for sample in sample_list:
+            current_path_center = data_path + '/IMG/' + sample[0].split('/')[-1]
+            # image_center = cv2.imread(current_path_center)
+            # image_center = ndimage.imread(current_path_center)
+            image_center = imageio.imread(current_path_center)
+            angle_center = float(sample[3])
+            # Center
+            images.append(image_center)
+            angles.append(angle_center)
+            # Flip
+            # Right
+            # Left
+            if len(images) >= batch_size:
+                # yield
+                # Convert to ndarray
+                X_train = np.array(images[:batch_size])
+                y_train = np.array(angles[:batch_size])
+                # yield sklearn.utils.shuffle(X_train, y_train)
+                yield (X_train, y_train)
+                images = images[batch_size:]
+                angles = angles[batch_size:]
+            #
+        # The rest of sample that was not yielded
+        if len(images) > 0:
+            # yield
+            # Convert to ndarray
+            X_train = np.array(images)
+            y_train = np.array(angles)
+            # yield sklearn.utils.shuffle(X_train, y_train)
+            yield (X_train, y_train)
+
+
 # Training hyper parameters
 #--------------------------------------#
 batch_size = 32
@@ -82,8 +123,8 @@ ch, row, col = 3, 160, 320 # Original image format
 
 # Data generator
 #--------------------------------------#
-train_gen = generator(train_samples, batch_size=batch_size, data_path=data_path)
-valid_gen = generator(validation_samples, batch_size=batch_size, data_path=data_path)
+train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path)
+valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path)
 
 # Train network
 #--------------------------------------#
