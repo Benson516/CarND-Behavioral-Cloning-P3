@@ -27,6 +27,7 @@ del samples[0]
 
 #
 # Get a subset of data for rapid testing of the script funtionality
+# sklearn.utils.shuffle(samples)
 # samples = samples[:100]
 #
 
@@ -75,7 +76,12 @@ def generator(sample_list, batch_size=32, data_path="."):
             yield (X_train, y_train)
 
 # The batch generator with augmentaiton
-def generator_aug(sample_list, batch_size=32, data_path="."):
+def generator_aug(sample_list, batch_size=32, data_path=".", aug_list=[], beta=0.1):
+    # Process the augmentation list
+    is_center_flip = "center_flip" in aug_list
+    is_right = "right" in aug_list
+    is_left = "left" in aug_list
+    #
     num_samples = len(sample_list)
     while True: # Eternal loop
         sklearn.utils.shuffle(sample_list)
@@ -85,6 +91,8 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
         # Loop over all samples
         for sample in sample_list:
             current_path_center = data_path + '/IMG/' + sample[0].split('/')[-1]
+            current_path_left = data_path + '/IMG/' + sample[1].split('/')[-1]
+            current_path_right = data_path + '/IMG/' + sample[2].split('/')[-1]
             # image_center = cv2.imread(current_path_center)
             # image_center = ndimage.imread(current_path_center)
             image_center = imageio.imread(current_path_center)
@@ -93,15 +101,28 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
             images.append(image_center)
             angles.append(angle_center)
 
+            # Augmentation
+            #-------------------------------#
             # Flip
-            # image_center_flip = np.fliplr(image_center)
-            # images.append(image_center_flip)
-            # angles.append(-1*angle_center)
-
+            if is_center_flip:
+                image_center_flip = np.fliplr(image_center)
+                images.append(image_center_flip)
+                angles.append(-1*angle_center)
             # Right
-
+            if is_right:
+                image_right = imageio.imread(current_path_right)
+                angle_right = angle_center * ( (1.0-beta) if angle_center > 0.0 else (1.0+beta))
+                images.append(image_right)
+                angles.append(angle_right)
             # Left
+            if is_left:
+                image_left = imageio.imread(current_path_left)
+                angle_left = angle_center * ( (1.0-beta) if angle_center < 0.0 else (1.0+beta))
+                images.append(image_left)
+                angles.append(angle_left)
+            #-------------------------------#
 
+            # yield
             if len(images) >= batch_size:
                 # yield
                 # Convert to ndarray
@@ -124,15 +145,20 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
 
 # Training hyper parameters
 #--------------------------------------#
+aug_list = []
+# aug_list += ['center_flip']
+aug_list += ['right']
+aug_list += ['left']
+#
 batch_size = 32
-aug_multiple = 1 # 2
+aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
 
 
 # Data generator
 #--------------------------------------#
-train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path)
-valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path)
+train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
+valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
 
 # Train network
 #--------------------------------------#
