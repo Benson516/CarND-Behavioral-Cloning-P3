@@ -93,6 +93,9 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
             images.append(image_center)
             angles.append(angle_center)
             # Flip
+            image_center_flip = np.fliplr(image_center)
+            images.append(image_center_flip)
+            angles.append(-1*angle_center)
             # Right
             # Left
             if len(images) >= batch_size:
@@ -118,6 +121,7 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
 # Training hyper parameters
 #--------------------------------------#
 batch_size = 32
+aug_multiple = 2
 ch, row, col = 3, 160, 320 # Original image format
 
 
@@ -154,11 +158,13 @@ model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
 # model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
+train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
+valid_steps_epoch = np.ceil( aug_multiple*len(validation_samples)/float(batch_size))
 history_object = model.fit_generator( \
                     train_gen, \
-                    steps_per_epoch=np.ceil( len(train_samples)/batch_size), \
+                    steps_per_epoch=train_steps_epoch, \
                     validation_data=valid_gen, \
-                    validation_steps=np.ceil( len(validation_samples)/batch_size), \
+                    validation_steps=valid_steps_epoch, \
                     epochs=5, verbose=1)
 
 # Save the model
