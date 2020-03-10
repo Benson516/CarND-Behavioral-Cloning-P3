@@ -33,23 +33,23 @@ del samples[0]
 
 
 
-# Split the train and test set 
+# Split the train and test set
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
 
 # The batch generator
 def generator(sample_list, batch_size=32, data_path="."):
-    num_samples = len(samples)
+    num_samples = len(sample_list)
     while True: # Eternal loop
-        shuffle(sample_list)
+        sklearn.utils.shuffle(sample_list)
         for offset in range(0, num_samples, batch_size):
             batch_samples = sample_list[offset:offset+batch_size]
 
             images = []
             angles = []
             for batch_sample in batch_samples:
-                current_path_center = data_path + batch_sample[0].split('/')[-1]
+                current_path_center = data_path + '/IMG/' + batch_sample[0].split('/')[-1]
                 # image_center = cv2.imread(current_path_center)
                 # image_center = ndimage.imread(current_path_center)
                 image_center = imageio.imread(current_path_center)
@@ -63,9 +63,10 @@ def generator(sample_list, batch_size=32, data_path="."):
             # Convert to ndarray
             X_train = np.array(images)
             y_train = np.array(angles)
-            yield sklearn.utils.shuffle(X_train, y_train)
+            # yield sklearn.utils.shuffle(X_train, y_train)
+            yield (X_train, y_train)
 
-# Training hyper parameters  
+# Training hyper parameters
 #--------------------------------------#
 batch_size = 32
 ch, row, col = 3, 160, 320 # Original image format
@@ -98,10 +99,10 @@ model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
 # model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
-model.fit_generator(train_gen, /
-                    step_per_epoch=ceil( len(train_samples)/batch_size), \
+model.fit_generator(train_gen, \
+                    steps_per_epoch=np.ceil( len(train_samples)/batch_size), \
                     validation_data=valid_gen, \
-                    validation_steps=ceil( len(validation_samples)/batch_size), \
+                    validation_steps=np.ceil( len(validation_samples)/batch_size), \
                     epochs=5, verbose=1)
 
 # Save the model
