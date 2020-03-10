@@ -11,19 +11,19 @@ data_path = '~/opt/carnd_p3/data/'
 data_path = os.path.expanduser(data_path)
 
 # Data importing
-lines = []
+samples = []
 with open(data_path + 'driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
-        lines.append(line)
+        samples.append(line)
 
-# Delete the first line in lines, since it's not a valid data
-del lines[0]
+# Delete the first element in samples, since it's not a valid data
+del samples[0]
 
 # Moving averaging for steering angle
 # N_h = 1
 # N = 2*N_h + 1
-# steering_angle_raw = [float(line[3]) for line in lines]
+# steering_angle_raw = [float(line[3]) for line in samples]
 # _result = np.convolve(steering_angle_raw, np.ones((N,))/float(N), mode='full')
 # steering_angle_averaged = _result[N_h:(-N_h)]
 # print(len(steering_angle_raw))
@@ -33,7 +33,7 @@ del lines[0]
 images = []
 measurements = []
 print("Start loading data...")
-for idx, line in enumerate(lines):
+for idx, line in enumerate(samples):
     source_path = line[0]
     filename = source_path.split('/')[-1]
     current_path = data_path + '/IMG/' + filename
@@ -45,6 +45,42 @@ for idx, line in enumerate(lines):
     # measurement = steering_angle_averaged[idx]
     measurements.append(measurement)
 print("Finish loading data")
+
+
+
+# Split the train and test set 
+from sklearn.model_selection import train_test_split
+train_samples, validation_samples = train_test_split(samples, test_size=0.2)
+
+
+# The batch generator
+def generator(sample_list, batch_size=32, data_path="."):
+    num_samples = len(samples)
+    while True: # Eternal loop
+        shuffle(sample_list)
+        for offset in range(0, num_samples, batch_size):
+            batch_samples = sample_list[offset:offset+batch_size]
+
+            images = []
+            angles = []
+            for batch_sample in batch_samples:
+                current_path_center = data_path + batch_sample[0].split('/')[-1]
+                # image_center = cv2.imread(current_path_center)
+                # image_center = ndimage.imread(current_path_center)
+                image_center = imageio.imread(current_path_center)
+                angle_center = float(batch_sample[3])
+                # Center
+                images.append(image_center)
+                angles.append(angle_center)
+                # Flip
+                # Right
+                # Left
+            # Convert to ndarray
+            X_train = np.array(images)
+            y_train = np.array(angles)
+            yield sklearn.utils.shuffle(X_train, y_train)
+        
+
 
 
 
