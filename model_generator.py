@@ -1,13 +1,15 @@
 import os
 import csv
-# import cv2
 import numpy as np
+import sklearn
+# import cv2
 # from  scipy import ndimage
 import imageio
 
-# data_path = '/opt/carnd_p3/data/'
-data_path = '~/opt/carnd_p3/data/'
+# data_path = '/opt/carnd_p3/data/' # On GPU-enabled workspace
+data_path = '~/opt/carnd_p3/data/' # On local machine
 
+# Expand the path
 data_path = os.path.expanduser(data_path)
 
 # Data importing
