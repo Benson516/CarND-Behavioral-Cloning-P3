@@ -126,8 +126,7 @@ ch, row, col = 3, 160, 320 # Original image format
 
 # Data generator
 #--------------------------------------#
-# train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
-train_gen = 100 # Arbitrary number, since we use infinite-looped generator
+train_gen = generator_aug(train_samples, batch_size=batch_size, data_path=data_path, aug_list=aug_list)
 valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=data_path, aug_list=[])
 
 
@@ -160,8 +159,8 @@ model.add( LeakyReLU(alpha=0.2) )
 model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
-# model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
-train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
+# train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
+train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
 valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 history_object = model.fit_generator( \
                     train_gen, \
