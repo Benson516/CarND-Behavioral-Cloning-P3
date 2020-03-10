@@ -2,9 +2,12 @@ import os
 import csv
 import numpy as np
 import sklearn
+#---#
 # import cv2
 # from  scipy import ndimage
 import imageio
+#---#
+import matplotlib.pyplot as plt
 
 # data_path = '/opt/carnd_p3/data/' # On GPU-enabled workspace
 data_path = '~/opt/carnd_p3/data/' # On local machine
@@ -21,6 +24,9 @@ with open(data_path + 'driving_log.csv') as csvfile:
 
 # Delete the first element in samples, since it's not a valid data
 del samples[0]
+
+# Get a subset of data for rapid testing of the script funtionality
+# samples = samples[:100]
 
 # Moving averaging for steering angle
 # N_h = 1
@@ -129,4 +135,5 @@ plt.title('model mean squared error loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
+plt.yscale('log')
 plt.show()
