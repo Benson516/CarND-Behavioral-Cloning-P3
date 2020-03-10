@@ -30,23 +30,6 @@ del samples[0]
 # print(len(steering_angle_averaged))
 
 
-images = []
-measurements = []
-print("Start loading data...")
-for idx, line in enumerate(samples):
-    source_path = line[0]
-    filename = source_path.split('/')[-1]
-    current_path = data_path + '/IMG/' + filename
-    # image = cv2.imread(current_path)
-    # image = ndimage.imread(current_path)
-    image = imageio.imread(current_path)
-    images.append(image)
-    measurement = float(line[3])
-    # measurement = steering_angle_averaged[idx]
-    measurements.append(measurement)
-print("Finish loading data")
-
-
 
 # Split the train and test set 
 from sklearn.model_selection import train_test_split
@@ -81,13 +64,9 @@ def generator(sample_list, batch_size=32, data_path="."):
             yield sklearn.utils.shuffle(X_train, y_train)
         
 
-
-
-
 # Trainning data
 #--------------------------------------#
-X_train = np.array(images)
-y_train = np.array(measurements)
+
 
 # Train network
 #--------------------------------------#
