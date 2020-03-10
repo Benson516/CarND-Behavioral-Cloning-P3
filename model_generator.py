@@ -92,12 +92,16 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
             # Center
             images.append(image_center)
             angles.append(angle_center)
+
             # Flip
-            image_center_flip = np.fliplr(image_center)
-            images.append(image_center_flip)
-            angles.append(-1*angle_center)
+            # image_center_flip = np.fliplr(image_center)
+            # images.append(image_center_flip)
+            # angles.append(-1*angle_center)
+
             # Right
+
             # Left
+
             if len(images) >= batch_size:
                 # yield
                 # Convert to ndarray
@@ -121,7 +125,7 @@ def generator_aug(sample_list, batch_size=32, data_path="."):
 # Training hyper parameters
 #--------------------------------------#
 batch_size = 32
-aug_multiple = 2
+aug_multiple = 1 # 2
 ch, row, col = 3, 160, 320 # Original image format
 
 
