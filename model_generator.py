@@ -64,11 +64,17 @@ def generator(sample_list, batch_size=32, data_path="."):
             X_train = np.array(images)
             y_train = np.array(angles)
             yield sklearn.utils.shuffle(X_train, y_train)
-        
 
-# Trainning data
+# Training hyper parameters  
 #--------------------------------------#
+batch_size = 32
+ch, row, col = 3, 160, 320 # Original image format
 
+
+# Data generator
+#--------------------------------------#
+train_gen = generator(train_samples, batch_size=batch_size, data_path=data_path)
+valid_gen = generator(validation_samples, batch_size=batch_size, data_path=data_path)
 
 # Train network
 #--------------------------------------#
@@ -91,7 +97,12 @@ model.add( Dense(84) )
 model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
+# model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
+model.fit_generator(train_gen, /
+                    step_per_epoch=ceil( len(train_samples)/batch_size), \
+                    validation_data=valid_gen, \
+                    validation_steps=ceil( len(validation_samples)/batch_size), \
+                    epochs=5, verbose=1)
 
 # Save the model
 model.save('model.h5')
