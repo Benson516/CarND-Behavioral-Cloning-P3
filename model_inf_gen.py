@@ -195,6 +195,7 @@ model.add( LeakyReLU(alpha=0.2) )
 model.add( Dense(1) )
 
 model.compile( loss='mse', optimizer='adam' )
+model.summary()
 # train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
 valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 
