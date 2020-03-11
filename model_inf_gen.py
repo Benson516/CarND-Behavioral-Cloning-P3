@@ -118,12 +118,12 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
 # Training hyper parameters
 #--------------------------------------#
 aug_list = []
-# aug_list += ['center_flip']
+aug_list += ['center_flip']
 aug_list += ['right']
 aug_list += ['left']
 #
 batch_size = 32
-num_epoch = 10 # 5
+num_epoch = 30 # 10 # 5
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
@@ -143,6 +143,7 @@ from keras.layers import Flatten, Dense, Lambda, LeakyReLU, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 from keras import regularizers
+from keras.callbacks.callbacks import EarlyStopping
 
 # Create the model
 #--------------------------------------#
@@ -193,12 +194,14 @@ valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 
 train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
 # valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
+
+stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.05, patience=3)
 history_object = model.fit_generator( \
                     train_gen, \
                     steps_per_epoch=train_steps_epoch, \
                     validation_data=valid_gen, \
                     validation_steps=valid_steps_epoch, \
-                    epochs=num_epoch, verbose=1)
+                    epochs=num_epoch, verbose=1, callbacks=[stopper_cb])
 
 # Save the model
 #--------------------------------------#
