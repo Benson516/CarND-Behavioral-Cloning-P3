@@ -123,7 +123,7 @@ aug_list += ['right']
 aug_list += ['left']
 #
 batch_size = 32
-num_epoch = 30 # 10 # 5
+num_epoch = 5 # 10 # 5
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
@@ -195,7 +195,7 @@ valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
 # valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
 
-stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.05, patience=3)
+stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3)
 history_object = model.fit_generator( \
                     train_gen, \
                     steps_per_epoch=train_steps_epoch, \
