@@ -198,6 +198,35 @@ def create_model_LeNet():
     model.compile( loss='mse', optimizer='adam' )
     return model
 
+def create_model_B0():
+    model = Sequential()
+    model.add( Cropping2D(cropping=((50,20), (0,0)), input_shape=(row, col, ch) ) )
+    model.add( Lambda( lambda x: x / 255.0 - 0.5 ) )
+    # 2nd model
+    model.add( Convolution2D(16,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(24,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(30,7,7,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Flatten() )
+    model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(11, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(2, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(1) )
+    #
+    model.compile( loss='mse', optimizer='adam' )
+    return model
+
 def create_model_B1():
     model = Sequential()
     model.add( Cropping2D(cropping=((50,20), (0,0)), input_shape=(row, col, ch) ) )
@@ -235,7 +264,8 @@ def create_model_B1():
 
 # Chose the model
 # create_model = create_model_LeNet
-create_model = create_model_B1
+create_model = create_model_B0
+# create_model = create_model_B1
 
 
 # Get the epoch from file name
