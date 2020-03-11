@@ -293,7 +293,7 @@ valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 # Callbacks
 #--------------------------------------#
 checkpoint_cb = ModelCheckpoint(filepath=checkpoint_path_cb, monitor='val_loss', save_best_only=True)
-csv_logger_cb = CSVLogger(log_csv_path, append=True, separator=';')
+csv_logger_cb = CSVLogger(log_csv_path, append=True, separator=',')
 stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3)
 #
 callbacks = [checkpoint_cb, csv_logger_cb, stopper_cb]
@@ -322,14 +322,17 @@ print(history_object.history.keys())
 
 # plot the training and validation loss for each epoch
 #--------------------------------------#
-plt.figure()
-plt.plot(history_object.history['loss'])
-plt.plot(history_object.history['val_loss'])
-plt.title('model mean squared error loss')
-plt.ylabel('mean squared error loss')
-plt.xlabel('epoch')
-plt.legend(['training set', 'validation set'], loc='upper right')
-plt.yscale('log')
+if len(history_object.history) > 0:
+    plt.figure()
+    plt.plot(history_object.history['loss'])
+    plt.plot(history_object.history['val_loss'])
+    plt.title('model mean squared error loss')
+    plt.ylabel('mean squared error loss')
+    plt.xlabel('epoch')
+    plt.legend(['training set', 'validation set'], loc='upper right')
+    plt.yscale('log')
+
+
 
 # Importing log
 log_lines = []
@@ -339,22 +342,24 @@ if os.path.isfile(log_csv_path):
         for line in reader:
             log_lines.append(line)
 
-logs = dict()
+log_dict = dict()
 log_keys = list()
 # The first raw are keys
 for key in log_lines[0]:
-    logs[key] = list()
+    log_dict[key] = list()
     log_keys.append(key)
-del logs[0]
-for line in logs:
+del log_lines[0]
+#
+for line in log_lines:
     for idx, key in enumerate(log_keys):
-        logs[key] = float(line[idx])
+        # print(line[idx])
+        log_dict[key].append( float(line[idx]) )
 
 # plot the training and validation loss for each epoch
 #--------------------------------------#
 plt.figure()
-plt.plot(logs['loss'])
-plt.plot(logs['val_loss'])
+plt.plot(log_dict['loss'])
+plt.plot(log_dict['val_loss'])
 plt.title('model mean squared error loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
