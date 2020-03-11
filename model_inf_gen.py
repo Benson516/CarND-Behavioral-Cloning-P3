@@ -118,12 +118,12 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
 # Training hyper parameters
 #--------------------------------------#
 aug_list = []
-aug_list += ['center_flip']
+# aug_list += ['center_flip']
 aug_list += ['right']
 aug_list += ['left']
 #
 batch_size = 32
-num_epoch = 5 # 10 # 5
+num_epoch = 10 # 5
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
@@ -141,7 +141,7 @@ valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=d
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Lambda, LeakyReLU, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
-from keras.layers.pooling import MaxPooling2D
+from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 from keras import regularizers
 from keras.callbacks.callbacks import EarlyStopping
 
@@ -169,18 +169,24 @@ model.add( Lambda( lambda x: x / 255.0 - 0.5 ) )
 # 2nd model
 model.add( Convolution2D(16,5,5,activation=None) )
 model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
+model.add( AveragePooling2D())
 model.add( Dropout(rate=0.5) )
 model.add( Convolution2D(24,5,5,activation=None) )
 model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
+model.add( AveragePooling2D())
 model.add( Dropout(rate=0.5) )
-model.add( Convolution2D(30,7,7,activation=None) )
+model.add( Convolution2D(30,5,5,activation=None) )
 model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
+model.add( AveragePooling2D())
+model.add( Dropout(rate=0.5) )
+model.add( Convolution2D(10,5,5,activation=None) )
+model.add( LeakyReLU(alpha=0.2) )
+model.add( AveragePooling2D())
 model.add( Dropout(rate=0.5) )
 model.add( Flatten() )
 model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
+model.add( LeakyReLU(alpha=0.2) )
+model.add( Dense(15, kernel_regularizer=regularizers.l2(0.01) ) )
 model.add( LeakyReLU(alpha=0.2) )
 model.add( Dense(11, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
 model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
@@ -201,7 +207,10 @@ history_object = model.fit_generator( \
                     steps_per_epoch=train_steps_epoch, \
                     validation_data=valid_gen, \
                     validation_steps=valid_steps_epoch, \
-                    epochs=num_epoch, verbose=1, callbacks=[stopper_cb])
+                    epochs=num_epoch, verbose=1, \
+                    callbacks=[stopper_cb] \
+                    )
+
 
 # Save the model
 #--------------------------------------#
