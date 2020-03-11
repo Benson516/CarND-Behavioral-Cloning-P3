@@ -147,6 +147,9 @@ checkpoint_sufix = ".hdf5"
 checkpoint_path_cb = checkpoint_dir + checkpoint_prefix + "{epoch:02d}" + checkpoint_sufix
 checkpoint_path_glob = checkpoint_dir + checkpoint_prefix + "*" + checkpoint_sufix
 
+# The performance log path
+log_dir = "./log/"
+log_csv_path = log_dir + "log.csv"
 
 # Data generator
 #--------------------------------------#
@@ -158,12 +161,15 @@ valid_gen = generator_aug(validation_samples, batch_size=batch_size, data_path=d
 # Train network
 #--------------------------------------#
 from keras.models import Sequential
+from keras.models import load_model
+from keras.callbacks.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
+#
 from keras.layers import Flatten, Dense, Lambda, LeakyReLU, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 from keras import regularizers
-from keras.callbacks.callbacks import EarlyStopping, ModelCheckpoint
-from keras.models import load_model
+
+
 
 
 
@@ -255,11 +261,17 @@ if len(ckeckpoints) > 0:
     model = load_model(checkpoint_path)
     # Finding the epoch index from which we are resuming
     initial_epoch = get_init_epoch(checkpoint_path)
+    # Don't remove the log file, just continue
 else:
     print("No models found, create a new one...")
     # Create a new one
     model = create_model()
     initial_epoch = 0
+    # Remove the log file
+    if os.path.isfile(log_csv_path):
+        print("Removing the exsited <%s> file" % log_csv_path)
+        os.remove(log_csv_path)
+
 #
 print("initial_epoch = %d" % initial_epoch)
 print("-" * 70)
@@ -274,14 +286,17 @@ model.summary()
 # Training steps
 #--------------------------------------#
 # train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
-train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
+train_steps_epoch = 10 # 100 # Arbitrary number, since we use infinite-looped generator
 valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 # valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
 
 # Callbacks
 #--------------------------------------#
 checkpoint_cb = ModelCheckpoint(filepath=checkpoint_path_cb, monitor='val_loss', save_best_only=True)
+csv_logger_cb = CSVLogger(log_csv_path, append=True, separator=';')
 stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3)
+#
+callbacks = [checkpoint_cb, csv_logger_cb, stopper_cb]
 
 # Fit
 #--------------------------------------#
@@ -292,7 +307,7 @@ history_object = model.fit_generator( \
                     validation_steps=valid_steps_epoch, \
                     epochs=num_epoch, verbose=1, \
                     initial_epoch=initial_epoch, \
-                    callbacks=[checkpoint_cb, stopper_cb] \
+                    callbacks=callbacks \
                     )
 
 
