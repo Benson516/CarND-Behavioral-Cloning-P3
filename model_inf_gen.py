@@ -123,7 +123,7 @@ aug_list += ['right']
 aug_list += ['left']
 #
 batch_size = 32
-num_epoch = 5
+num_epoch = 10 # 5
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
