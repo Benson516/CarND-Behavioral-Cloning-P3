@@ -251,9 +251,9 @@ def create_model_B1():
     model.add( Flatten() )
     model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( Dense(15, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(16, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( Dense(11, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(12, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( Dense(2, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
@@ -264,8 +264,8 @@ def create_model_B1():
 
 # Chose the model
 # create_model = create_model_LeNet
-create_model = create_model_B0
-# create_model = create_model_B1
+# create_model = create_model_B0
+create_model = create_model_B1
 
 
 # Get the epoch from file name
