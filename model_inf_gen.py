@@ -135,7 +135,7 @@ aug_list += ['left']
 # aug_list += ['left_flip']
 #
 batch_size = 32
-num_epoch = 10 # 5
+num_epoch = 50 # 10 # 5
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
@@ -286,7 +286,7 @@ model.summary()
 # Training steps
 #--------------------------------------#
 # train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
-train_steps_epoch = 10 # 100 # Arbitrary number, since we use infinite-looped generator
+train_steps_epoch = 20 # 100 # Arbitrary number, since we use infinite-looped generator
 valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 # valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
 
