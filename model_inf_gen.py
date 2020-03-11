@@ -322,6 +322,7 @@ print(history_object.history.keys())
 
 # plot the training and validation loss for each epoch
 #--------------------------------------#
+plt.figure()
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])
 plt.title('model mean squared error loss')
@@ -329,4 +330,37 @@ plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
 plt.yscale('log')
+
+# Importing log
+log_lines = []
+if os.path.isfile(log_csv_path):
+    with open(log_csv_path) as csvfile:
+        reader = csv.reader(csvfile)
+        for line in reader:
+            log_lines.append(line)
+
+logs = dict()
+log_keys = list()
+# The first raw are keys
+for key in log_lines[0]:
+    logs[key] = list()
+    log_keys.append(key)
+del logs[0]
+for line in logs:
+    for idx, key in enumerate(log_keys):
+        logs[key] = float(line[idx])
+
+# plot the training and validation loss for each epoch
+#--------------------------------------#
+plt.figure()
+plt.plot(logs['loss'])
+plt.plot(logs['val_loss'])
+plt.title('model mean squared error loss')
+plt.ylabel('mean squared error loss')
+plt.xlabel('epoch')
+plt.legend(['training set', 'validation set'], loc='upper right')
+plt.yscale('log')
+
+
+# Spin
 plt.show()
