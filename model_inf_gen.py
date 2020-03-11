@@ -53,7 +53,9 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
     # Process the augmentation list
     is_center_flip = "center_flip" in aug_list
     is_right = "right" in aug_list
+    is_right_flip = "right_flip" in aug_list
     is_left = "left" in aug_list
+    is_left_flip = "left_flip" in aug_list
     #
     if yield_size is None:
         yield_size = int(batch_size*1.5)
@@ -81,23 +83,30 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
             #-------------------------------#
             # Flip
             if is_center_flip:
-                image_center_flip = np.fliplr(image_center)
-                images.append(image_center_flip)
-                angles.append(-1*angle_center)
+                images.append( np.fliplr(image_center) )
+                angles.append(-angle_center)
             # Right
-            if is_right:
+            if is_right or is_right_flip:
                 image_right = imageio.imread(current_path_right)
                 # angle_right = angle_center * ( (1.0-beta) if angle_center > 0.0 else (1.0+beta))
                 angle_right = angle_center - beta
-                images.append(image_right)
-                angles.append(angle_right)
+                if is_right:
+                    images.append(image_right)
+                    angles.append(angle_right)
+                if is_right_flip:
+                    images.append(np.fliplr(image_right))
+                    angles.append(-angle_right)
             # Left
-            if is_left:
+            if is_left or is_left_flip:
                 image_left = imageio.imread(current_path_left)
                 # angle_left = angle_center * ( (1.0-beta) if angle_center < 0.0 else (1.0+beta))
                 angle_left = angle_center + beta
-                images.append(image_left)
-                angles.append(angle_left)
+                if is_left:
+                    images.append(image_left)
+                    angles.append(angle_left)
+                if is_left_flip:
+                    images.append(np.fliplr(image_left))
+                    angles.append(-angle_left)
             #-------------------------------#
 
             # yield
@@ -118,9 +127,11 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
 # Training hyper parameters
 #--------------------------------------#
 aug_list = []
-# aug_list += ['center_flip']
 aug_list += ['right']
 aug_list += ['left']
+# aug_list += ['center_flip']
+# aug_list += ['right_flip']
+# aug_list += ['left_flip']
 #
 batch_size = 32
 num_epoch = 10 # 5
