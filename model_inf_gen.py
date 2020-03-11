@@ -324,7 +324,7 @@ valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 #--------------------------------------#
 checkpoint_cb = ModelCheckpoint(filepath=checkpoint_path_cb, monitor='val_loss', save_best_only=True)
 csv_logger_cb = CSVLogger(log_csv_path, append=True, separator=',')
-stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3)
+stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.001, patience=5)
 #
 callbacks = [checkpoint_cb, csv_logger_cb, stopper_cb]
 
