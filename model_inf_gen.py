@@ -234,26 +234,26 @@ def create_model_B1():
     # 2nd model
     model.add( Convolution2D(16,5,5,activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( MaxPooling2D())
+    model.add( AveragePooling2D())
     model.add( Dropout(rate=0.5) )
     model.add( Convolution2D(24,5,5,activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( MaxPooling2D())
+    model.add( AveragePooling2D())
     model.add( Dropout(rate=0.5) )
-    model.add( Convolution2D(30,5,5,activation=None) )
+    model.add( Convolution2D(26,3,5,activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( MaxPooling2D())
+    model.add( AveragePooling2D())
     model.add( Dropout(rate=0.5) )
-    model.add( Convolution2D(10,5,5,activation=None) )
+    model.add( Convolution2D(16,1,7,activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( MaxPooling2D())
+    model.add( AveragePooling2D())
     model.add( Dropout(rate=0.5) )
     model.add( Flatten() )
     model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( Dense(16, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(8, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
-    model.add( Dense(12, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(8, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( Dense(2, kernel_regularizer=regularizers.l2(0.01) ) )
     model.add( LeakyReLU(alpha=0.2) )
@@ -262,10 +262,13 @@ def create_model_B1():
     model.compile( loss='mse', optimizer='adam' )
     return model
 
+
+
 # Chose the model
 # create_model = create_model_LeNet
 # create_model = create_model_B0
 create_model = create_model_B1
+# create_model = create_model_B2
 
 
 # Get the epoch from file name
