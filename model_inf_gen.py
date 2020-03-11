@@ -1,4 +1,5 @@
 import os
+import glob
 import csv
 import numpy as np
 import sklearn
@@ -139,6 +140,13 @@ num_epoch = 10 # 5
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
 
+# The checkpoint path
+checkpoint_dir = "./checkpoints/"
+checkpoint_prefix = "model_epoch_"
+checkpoint_sufix = ".hdf5"
+checkpoint_path_cb = checkpoint_dir + checkpoint_prefix + "{epoch:02d}" + checkpoint_sufix
+checkpoint_path_glob = checkpoint_dir + checkpoint_prefix + "*" + checkpoint_sufix
+
 
 # Data generator
 #--------------------------------------#
@@ -154,73 +162,137 @@ from keras.layers import Flatten, Dense, Lambda, LeakyReLU, Cropping2D, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 from keras import regularizers
-from keras.callbacks.callbacks import EarlyStopping
+from keras.callbacks.callbacks import EarlyStopping, ModelCheckpoint
+from keras.models import load_model
 
-# Create the model
+
+
+# Models
 #--------------------------------------#
-model = Sequential()
-model.add( Cropping2D(cropping=((50,20), (0,0)), input_shape=(row, col, ch) ) )
-model.add( Lambda( lambda x: x / 255.0 - 0.5 ) )
-# 1st model
-# model.add( Convolution2D(6,5,5,activation=None) )
-# model.add( LeakyReLU(alpha=0.2) )
-# model.add( MaxPooling2D())
-# model.add( Dropout(rate=0.5) )
-# model.add( Convolution2D(16,5,5,activation=None) )
-# model.add( LeakyReLU(alpha=0.2) )
-# model.add( MaxPooling2D())
-# model.add( Dropout(rate=0.5) )
-# model.add( Flatten() )
-# model.add( Dense(120, kernel_regularizer=regularizers.l2(0.01) ) )
-# model.add( LeakyReLU(alpha=0.2) )
-# model.add( Dense(84, kernel_regularizer=regularizers.l2(0.01) ) )
-# model.add( LeakyReLU(alpha=0.2) )
-# model.add( Dense(1) )
+def create_model_LeNet():
+    model = Sequential()
+    model.add( Cropping2D(cropping=((50,20), (0,0)), input_shape=(row, col, ch) ) )
+    model.add( Lambda( lambda x: x / 255.0 - 0.5 ) )
+    # 1st model
+    model.add( Convolution2D(6,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(16,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Flatten() )
+    model.add( Dense(120, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(84, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(1) )
+    #
+    model.compile( loss='mse', optimizer='adam' )
+    return model
 
-# 2nd model
-model.add( Convolution2D(16,5,5,activation=None) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
-model.add( Dropout(rate=0.5) )
-model.add( Convolution2D(24,5,5,activation=None) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
-model.add( Dropout(rate=0.5) )
-model.add( Convolution2D(30,5,5,activation=None) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
-model.add( Dropout(rate=0.5) )
-model.add( Convolution2D(10,5,5,activation=None) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( MaxPooling2D())
-model.add( Dropout(rate=0.5) )
-model.add( Flatten() )
-model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( Dense(15, kernel_regularizer=regularizers.l2(0.01) ) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( Dense(11, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
-model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
-model.add( Dense(2, kernel_regularizer=regularizers.l2(0.01) ) )
-model.add( LeakyReLU(alpha=0.2) )
-model.add( Dense(1) )
+def create_model_B1():
+    model = Sequential()
+    model.add( Cropping2D(cropping=((50,20), (0,0)), input_shape=(row, col, ch) ) )
+    model.add( Lambda( lambda x: x / 255.0 - 0.5 ) )
+    # 2nd model
+    model.add( Convolution2D(16,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(24,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(30,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Convolution2D(10,5,5,activation=None) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( MaxPooling2D())
+    model.add( Dropout(rate=0.5) )
+    model.add( Flatten() )
+    model.add( Dense(30, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(15, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(11, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(6, activation='tanh', kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( Dense(2, kernel_regularizer=regularizers.l2(0.01) ) )
+    model.add( LeakyReLU(alpha=0.2) )
+    model.add( Dense(1) )
+    #
+    model.compile( loss='mse', optimizer='adam' )
+    return model
 
-model.compile( loss='mse', optimizer='adam' )
+# Chose the model
+# create_model = create_model_LeNet
+create_model = create_model_B1
+
+
+# Get the epoch from file name
+def get_init_epoch(f_path):
+    prefix_idx = f_path.find(checkpoint_prefix)
+    sufix_idx = f_path.find(checkpoint_sufix)
+    s_epoch = f_path[(prefix_idx+len(checkpoint_prefix)):sufix_idx]
+    print("s_epoch = %s" % s_epoch)
+    n_epoch = int(s_epoch)
+    print("n_epoch = %d" % n_epoch)
+    return n_epoch
+
+# Create or load model instance
+#--------------------------------------#
+print()
+print("-" * 70)
+ckeckpoints = sorted(glob.glob(checkpoint_path_glob))
+if len(ckeckpoints) > 0:
+    checkpoint_path = ckeckpoints[-1]
+    print("temp models found: %s" % str(ckeckpoints))
+    print("Load the model <%s> to continue training..." % checkpoint_path)
+    # Load the exist one
+    model = load_model(checkpoint_path)
+    # Finding the epoch index from which we are resuming
+    initial_epoch = get_init_epoch(checkpoint_path)
+else:
+    print("No models found, create a new one...")
+    # Create a new one
+    model = create_model()
+    initial_epoch = 0
+#
+print("initial_epoch = %d" % initial_epoch)
+print("-" * 70)
+print()
+
+
+# Model summary
+#--------------------------------------#
 model.summary()
-# train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
-valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
+#
 
+# Training steps
+#--------------------------------------#
+# train_steps_epoch = np.ceil( aug_multiple*len(train_samples)/float(batch_size))
 train_steps_epoch = 100 # Arbitrary number, since we use infinite-looped generator
+valid_steps_epoch = np.ceil( 1*len(validation_samples)/float(batch_size))
 # valid_steps_epoch = np.floor( 1*len(validation_samples)/float(batch_size)) # Remove the last step, since we are using infinite-looped generator
 
+# Callbacks
+#--------------------------------------#
+checkpoint_cb = ModelCheckpoint(filepath=checkpoint_path_cb, monitor='val_loss', save_best_only=True)
 stopper_cb = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3)
+
+# Fit
+#--------------------------------------#
 history_object = model.fit_generator( \
                     train_gen, \
                     steps_per_epoch=train_steps_epoch, \
                     validation_data=valid_gen, \
                     validation_steps=valid_steps_epoch, \
                     epochs=num_epoch, verbose=1, \
-                    callbacks=[stopper_cb] \
+                    initial_epoch=initial_epoch, \
+                    callbacks=[checkpoint_cb, stopper_cb] \
                     )
 
 
