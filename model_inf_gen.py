@@ -50,7 +50,7 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
 
 # The batch generator with augmentaiton
-def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", aug_list=[], beta=0.2):
+def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", aug_list=[], beta=0.3):
     # Process the augmentation list
     is_center_flip = "center_flip" in aug_list
     is_right = "right" in aug_list
@@ -275,13 +275,13 @@ def create_model_B2():
     model.add( LeakyReLU(alpha=0.2) )
     model.add( AveragePooling2D())
     # model.add( Dropout(rate=0.5) )
-    model.add( Convolution2D(24, kernel_size=(5,5), strides=(2, 2), activation=None) )
+    model.add( Convolution2D(24, kernel_size=(5,5), strides=(1, 2), activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
     # model.add( Dropout(rate=0.5) )
-    model.add( Convolution2D(26, kernel_size=(5,5), strides=(2, 2), activation=None) )
+    model.add( Convolution2D(26, kernel_size=(5,5), strides=(1, 2), activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
     # model.add( Dropout(rate=0.5) )
-    model.add( Convolution2D(30, kernel_size=(5,5),  strides=(1, 1), activation=None) )
+    model.add( Convolution2D(30, kernel_size=(5,5),  strides=(1, 2), activation=None) )
     model.add( LeakyReLU(alpha=0.2) )
     model.add( Dropout(rate=0.5) )
     model.add( Flatten() )
