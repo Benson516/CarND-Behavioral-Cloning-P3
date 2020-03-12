@@ -417,11 +417,19 @@ for key in log_lines[0]:
     log_dict[key] = list()
     log_keys.append(key)
 del log_lines[0]
+
+# The first column are epochs, remove the duplicated one (old), keep the latest
+epoch_idx_dict = dict()
+for l_idx, line in enumerate(log_lines):
+    _e = line[0]
+    epoch_idx_dict[_e] = l_idx
 #
-for line in log_lines:
-    for idx, key in enumerate(log_keys):
-        # print(line[idx])
-        log_dict[key].append( float(line[idx]) )
+for l_idx, line in enumerate(log_lines):
+    if epoch_idx_dict[line[0]] == l_idx:
+        # The line that was kept
+        for c_idx, key in enumerate(log_keys):
+            # print(line[idx])
+            log_dict[key].append( float(line[c_idx]) )
 
 # plot the training and validation loss for each epoch
 #--------------------------------------#
