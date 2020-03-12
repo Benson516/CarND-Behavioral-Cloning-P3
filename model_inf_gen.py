@@ -130,15 +130,19 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path=".", au
 aug_list = []
 aug_list += ['right']
 aug_list += ['left']
-# aug_list += ['center_flip']
-# aug_list += ['right_flip']
-# aug_list += ['left_flip']
+aug_list += ['center_flip']
+aug_list += ['right_flip']
+aug_list += ['left_flip']
 #
 batch_size = 32
-num_epoch = 10 # 50 # 10 # 5
+num_epoch_per_real_data = 5 # 50 # 10 # 5
+
 #
 aug_multiple = 1 + len(aug_list)
 ch, row, col = 3, 160, 320 # Original image format
+
+#
+num_epoch = num_epoch_per_real_data * aug_multiple
 
 # The checkpoint path
 checkpoint_dir = "./checkpoints/"
