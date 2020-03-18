@@ -132,9 +132,13 @@ My model consists of four convolution layers, the filter kernal size are all 5x5
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
+The model contains a dropout layer at the last convolution layer (model.py line 286) and L2 regulizer for weight matrixes of all `Dense` layers.
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 49). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+
+
+
+
 
 #### 3. Model parameter tuning
 
