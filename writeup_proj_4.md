@@ -70,6 +70,7 @@ The model.py includes the following three key parts:
 The model is described and defined using Keras APIs in `create_model_B2()` function
 
 **Processing Data**
+
 The first step of data loading is to load the `driving_log.csv` file as a list. This file contains the files names of input images to NN and the output labels. After loading the `samples` list, I use `train_test_split()` from `sklearn.model_selection` module to ramdonly split the data set into `train_samples` and `validation_samples` in the ratio of 4:1 (80%, 20%).
 
 Instead of directly loading all images into memory at once, I create a generator to load and process image data on the fly.
@@ -114,7 +115,11 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path="."):
 
 ```
  
-**Model trainging**
+**Model Trainging**
+
+Since my local computer sill sometimes shuted-down from over-heating, I construct a mechanism for resuming the training status from last unfinished training. This includes two parts:
+- `ModelCheckpoint` callback to save temporary models
+- `load_model` to load the save temporary model, if any.
 
 
 
