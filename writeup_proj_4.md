@@ -127,9 +127,8 @@ Since my local computer sill sometimes shuted-down from over-heating, I construc
 
 #### 1. An appropriate model architecture has been employed
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+My model consists of four convolution layers, the filter kernal size are all 5x5 (model.py line 274, 278, 281, and 284). Each convolution layers are activated by Leaky-ReLU (model.py line 275, 279, 282, and 285). The input data are normalized by the second layer, which is Keras lambda layer performin the following function `lambda x: x / 255.0 - 0.5` (model.py line 272).
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
 
 #### 2. Attempts to reduce overfitting in the model
 
