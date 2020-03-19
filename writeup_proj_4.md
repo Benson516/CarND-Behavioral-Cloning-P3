@@ -140,17 +140,14 @@ The model was trained and validated on different data sets (`train_samples` and 
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
 
-
-
-
-
+The model was trained by adam optimizer with all the parameters left to default (model.py line 298). The dropout rate for the model is set at 0.5 (model.py line 286). The batch size is set to 32 samples (model.py line 137); however, since the infinitively-looped generator is used, the `train_steps_epoch` is set arbitrarily to `100` (model.py line 357). The chosen of `train_steps_epoch` does not effect the quality of training; instead, it effect how offent the optimizer will validate the model with validation set and how offent the temporary model will be saved. I chose `100` so that the training step can be validated and saved offently.
 
 
 #### 4. Appropriate training data
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
+The data I used for training is basically the pre-recorded data provided by project. The data provided by project is a center-lane-driving record with center image, right-shifted image, and left-shifted image and the steering angle as label. Instead of collecting new data, I augmented the given dataset by utilizing the left/right images to generate recovery behaviors. Also, to further increase the data utilization, center images, left images, and right images are all mirrored horizontally. By doing so, the model can learn similar behavior for left and right turn or get more data for right/left turn from data of left/right turn.
 
-For details about how I created the training data, see the next section. 
+The details of the data for training are described in the next section.
 
 ### Model Architecture and Training Strategy
 
