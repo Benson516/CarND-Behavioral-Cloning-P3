@@ -77,7 +77,6 @@ def generator_aug(sample_list, batch_size=32, yield_size=None, data_path="."):
     if yield_size is None:
         yield_size = int(batch_size*1.5)
     #
-    num_samples = len(sample_list)
     images = []
     angles = []
     while True: # Eternal loop
@@ -125,7 +124,7 @@ My model consists of four convolution layers, the filter kernal size are all 5x5
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model contains a dropout layer at the last convolution layer (model.py line 286) and L2 regulizer for weight matrixes of all `Dense` layers.
+The model contains a dropout layer at the last convolution layer (model.py line 286) and L2 regulizers for weight matrixes of all `Dense` layers.
 
 The model was trained and validated on different data sets (`train_samples` and `validation_samples`) to varify that if the model is overfitted  (code line 49). However, the testing is using the realtime generated data by running the simulator and `drive.py` to how the car drive instead of test with pre-recorded dataset.
 
@@ -167,9 +166,18 @@ In order to gauge how well the model was working, I split my image and steering 
 
 To combat the overfitting, I modified the model so that ...
 
+
+
+
 Then I ... 
 
+
+
+
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+
+
+
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
