@@ -1,11 +1,4 @@
 # **Behavioral Cloning** 
-
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Behavioral Cloning Project**
 
 The goals / steps of this project are the following:
@@ -27,7 +20,7 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 
 ## Rubric Points
-### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
 ### Files Submitted & Code Quality
@@ -148,6 +141,11 @@ The model was trained by adam optimizer with all the parameters left to default 
 The data I used for training is basically the pre-recorded data provided by project. The data provided by project is a center-lane-driving record with center image, right-shifted image, and left-shifted image and the steering angle as label. Instead of collecting new data, I augmented the given dataset by utilizing the left/right images to generate recovery behaviors. Also, to further increase the data utilization, center images, left images, and right images are all mirrored horizontally. By doing so, the model can learn similar behavior for left and right turn or get more data for right/left turn from data of left/right turn.
 
 The details of the data for training are described in the next section.
+
+
+
+
+
 
 ### Model Architecture and Training Strategy
 
