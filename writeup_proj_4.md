@@ -150,7 +150,7 @@ The details of the data for training are described in the next section.
 
 #### 1. Solution Design Approach
 
-
+The first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane.
 
 
 
