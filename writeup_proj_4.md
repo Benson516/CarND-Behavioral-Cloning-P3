@@ -150,7 +150,10 @@ The details of the data for training are described in the next section.
 
 #### 1. Solution Design Approach
 
-The first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane.
+The first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane. I think the function represented by the last two layer is essetial to be an even function; therefore, I design the the last 2nd layer to have two output with (Leaky)ReLu activation. In this way, the left turn command might use one of the activation, while the right turn command use another.
+
+
+
 
 
 
