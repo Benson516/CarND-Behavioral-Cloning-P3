@@ -134,15 +134,17 @@ My model consists of four convolution layers, the filter kernal size are all 5x5
 
 The model contains a dropout layer at the last convolution layer (model.py line 286) and L2 regulizer for weight matrixes of all `Dense` layers.
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 49). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
-
-
-
-
+The model was trained and validated on different data sets (`train_samples` and `validation_samples`) to varify that if the model is overfitted  (code line 49). However, the testing is using the realtime generated data by running the simulator and `drive.py` to how the car drive instead of test with pre-recorded dataset.
 
 #### 3. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+
+
+
+
+
+
 
 #### 4. Appropriate training data
 
