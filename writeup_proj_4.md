@@ -11,7 +11,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[image1]: ./images/model.png "Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
@@ -150,7 +150,9 @@ The details of the data for training are described in the next section.
 
 #### 1. Solution Design Approach
 
-The first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane. I think the function represented by the last two layer is essetial to be an even function; therefore, I design the the last 2nd layer to have two output with (Leaky)ReLu activation. In this way, the left turn command might use one of the activation, while the right turn command use another.
+The final version of the structure is shoillustrated in Fig. 1.
+
+When designing the model, the first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane. I think the function represented by the last two layer is essetial to be an even function; therefore, I design the the last 2nd layer to have two output with (Leaky)ReLu activation. In this way, the left turn command might be provided by one of the activation, while the right turn command is provided by another one.
 
 
 
@@ -191,6 +193,8 @@ The final model architecture (model.py lines 18-24) consisted of a convolution n
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
 ![alt text][image1]
+
+Fig. 1 Model visualization
 
 #### 3. Creation of the Training Set & Training Process
 
