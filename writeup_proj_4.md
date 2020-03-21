@@ -152,8 +152,9 @@ The details of the data for training are described in the next section.
 
 The final version of the structure is illustrated in Fig. 1.
 
-When designing the model, the first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane. I think the function represented by the last two layer is essetial to be an even function; therefore, I design the the last 2nd layer to have two output with (Leaky)ReLu activation. In this way, the left turn command might be provided by one of the activation, while the right turn command is provided by another one.
+When designing the model, the first intuition I came up with for this task is that the output should be able to provide symmetric value around zero, so that the vehicle can have similar ability to turn left and right without biasing at strignt lane. I think the function represented by the last two layer is essetial to be an even function; therefore, I design the the last 2nd layer to have two output with `(Leaky)ReLU` activation. In this way, the left turn command might be provided by one of the activation, while the right turn command is provided by another one.
 
+When it comes to the last 3rd and 4th layer, however, I realized that the `(Leaky)ReLU` is not efficient for generating turning features, since idealy only half of them will be activated when turning. Hence, I use `tanh` as activation.
 
 
 
@@ -188,7 +189,8 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 270-298) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (model.py lines 270-298) is 
+consisted of a convolution neural network with the following layers and layer sizes ...
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
