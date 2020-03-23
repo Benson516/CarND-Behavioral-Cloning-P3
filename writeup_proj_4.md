@@ -11,6 +11,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
+[image0]: ./images/Train_valid_loss.png "Train-valid loss"
 [image1]: ./images/model.png "Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
@@ -142,10 +143,6 @@ The data I used for training is basically the pre-recorded data provided by proj
 The details of the data for training are described in the next section.
 
 
-
-
-
-
 ### Model Architecture and Training Strategy
 
 #### 1. Solution Design Approach
@@ -159,49 +156,64 @@ I design the the last 2nd layer to have two output with `(Leaky)ReLU` activation
 When it comes to the last 3rd and 4th layer, however, I realized that the `(Leaky)ReLU` is not efficient for generating turning features, since idealy only half of them will be activated when turning. Hence, I use `tanh` as activation.
 
 
-The design of the feature generator, i.e. the former layers, is modified from the Nvidia's self-driving car project. 
+The design of the feature generator, i.e. the 'Conv2D' layers, is modified from the Nvidia proposed network for self-driving car. One of the most important concept of the design is that, I think, it reduce the dimension of the output by using stride instead of pooling layer. The location of features are critical in this application, while pooling layers drop information of location and is not suitable.
+
+The resulted network contains 242,084 trainable parameters, and is light to train. The training for each epoch only takes 17 sec. on my local computer (using CPU). 
+
+Fig. 1 shows the training loss and validation loss. It's not clear why the validation loss is smaller than training loss when using `fit_generator()`; however, we still can see the trend.
+
+![alt text][image0]
+
+Fig. 1 Training/validation loss
+
+
+The final step was to run the simulator to see how well the car was driving around track one. After several tweaking the model design and training for 30 epoch, the car drive well in simulator (track 1).
 
 
 
 
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-
-
-
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-
-
-
-Then I ... 
-
-
-
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-
-
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 270-298) is 
-consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (model.py lines 270-298) is summarized in the following tables.
+
+|Layer (type)               |  Output Shape             | Param #   |
+|:---|:---|---:|
+|cropping2d_1 (Cropping2D)  | (None, 90, 320, 3)        |0  |       
+|lambda_1 (Lambda)          |  (None, 90, 320, 3)       | 0 |        
+|conv2d_1 (Conv2D)           | (None, 86, 158, 16)      | 1216 |     
+|leaky_re_lu_1 (LeakyReLU)    |(None, 86, 158, 16)      | 0     |    
+|average_pooling2d_1 (Average |(None, 43, 79, 16)       | 0      |   
+|conv2d_2 (Conv2D)            |(None, 39, 38, 24)       | 9624    |  
+|leaky_re_lu_2 (LeakyReLU)    |(None, 39, 38, 24)       | 0        | 
+|conv2d_3 (Conv2D)            |(None, 35, 17, 26)       | 15626     |
+|leaky_re_lu_3 (LeakyReLU)    |(None, 35, 17, 26)       | 0         |
+|conv2d_4 (Conv2D)            |(None, 31, 7, 30)        | 19530     |
+|leaky_re_lu_4 (LeakyReLU)    |(None, 31, 7, 30)        | 0         |
+|dropout_1 (Dropout)          |(None, 31, 7, 30)        | 0         |
+|flatten_1 (Flatten)          |(None, 6510)             | 0         |
+|dense_1 (Dense)              |(None, 30)               | 195330    |
+|leaky_re_lu_5 (LeakyReLU)    |(None, 30)               | 0         |
+|dense_2 (Dense)              |(None, 15)               | 465       |
+|leaky_re_lu_6 (LeakyReLU)    |(None, 15)               | 0         |
+|dense_3 (Dense)              |(None, 11)               | 176       |
+|dense_4 (Dense)              |(None, 8)                | 96        |
+|dense_5 (Dense)              |(None, 2)                | 18        |
+|leaky_re_lu_7 (LeakyReLU)    |(None, 2)                | 0         |
+|dense_6 (Dense)              |(None, 1)                | 3         |
+
+
+|Total params| 242,084|
+|:---|---:|
+|Trainable params| 242,084 |
+|Non-trainable params| 0 |
+
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
 
 ![alt text][image1]
 
-Fig. 1 Model visualization
+Fig. 2 Model visualization
 
 #### 3. Creation of the Training Set & Training Process
 
