@@ -23,7 +23,17 @@ current_path_center = data_path + '/IMG/' + sample.split('/')[-1]
 
 image_ = imageio.imread(current_path_center)
 
+image_crop = image_[50:-20, :]
 
 # plot
+#--------------------------#
+plt.figure()
 plt.imshow(image_)
+#
+plt.figure()
+plt.imshow(image_crop)
+
+
+
+# Show
 plt.show()
