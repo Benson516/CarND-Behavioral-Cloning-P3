@@ -253,3 +253,11 @@ The original data has been shuffled and separated into training set and validati
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs might be around 10 according to the curve of training-validation loss in Fig. 1. However, when testing the model for driving, this model failed at some corners. In this case, I simply train the model with more epoch (up to 30), and the model was significantly improved. 
 
 I think that the reason for the model improved without lowering the loss might be that the data is not balanced. The turning event is far less then the event of going straight, so the high loss with turning data is not significant; however, it's these turning data teach the vehicle to turn. The simplest way to improve the model under unbalanced data is by training the network with more epoch. I don't worry about overfitting since I have dropout layer in network and have L2-regularization terms in loss.
+
+
+# Result
+
+
+Here's a [link to the result video.](https://youtu.be/gHy3x9eaFVc)
+
+[![Alternate Text](http://img.youtube.com/vi/gHy3x9eaFVc/0.jpg)](https://youtu.be/gHy3x9eaFVc)
