@@ -241,25 +241,15 @@ Fig. 8 Cropped and mirrored right image (`mirrored image_right`)
 ![alt text][image8]
 Fig. 9 Cropped and mirrored left image (`mirrored image_left`)
 
- 
 
 
-Then I repeated this process on track two in order to get more data points.
+The preprocessing of data is integrated with the model using `Lambda` layer, which is defined to be the function `lambda x: x / 255.0 - 0.5`.
 
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+The above augmentation happened in the data generator. For validation, I setup the generator for validation not to augment data because that the model performing well on augmented data is not necessary well on real drive.
 
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. 
+The original data has been shuffled and separated into training set and validation set with `6429` data in training set and `1607` data in validation set (`4:1`). Consider the augmentation during training, the total data size would be `6429*6=38574` data for training and `1607` data for validation.
 
 
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs might be around 10 according to the curve of training-validation loss in Fig. 1. However, when testing the model for driving, this model failed at some corners. In this case, I simply train the model with more epoch (up to 30), and the model was significantly improved. 
 
-I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I think that the reason for the model improved without lowering the loss might be that the data is not balanced. The turning event is far less then the event of going straight, so the high loss with turning data is not significant; however, it's these turning data teach the vehicle to turn. The simplest way to improve the model under unbalanced data is by training the network with more epoch. I don't worry about overfitting since I have dropout layer in network and have L2-regularization terms in loss.
