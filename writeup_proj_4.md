@@ -43,17 +43,7 @@ python drive.py model.h5
 #### 3. Submission code is usable and readable
 
 
-Generator
-
-The code in model.py uses a Python generator, if needed, to generate data for training rather than storing the training data in memory. The model.py code is clearly organized and comments are included where needed.
-
-
-
-
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
-
-
-The model.py is dedicated to generate the model.h5, which is the NN model for generate the steering command for drive.py.
+The model.py is dedicated to produce the model.h5, which contains the NN model for generate the steering command for drive.py.
 The model.py includes the following three key parts:
 - Model definition
 - Processing of traing and validation data
