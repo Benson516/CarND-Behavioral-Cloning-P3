@@ -217,7 +217,7 @@ The data I used for training network is the pre-recorded provided with the proje
 - `Mirrored image_right --> -1*angle_right`: The flipped image_right for reusing the right-turn data on learning left-turn and vice-versa.
 - `Mirrored image_left --> -1*angle_left`: The flipped image_left for reusing the right-turn data on learning left-turn and vice-versa.
 
-The first layer of the network integrate a `Cropping2D` layer for obtaining ROI. Fig. 3 shows one original center image, and Fig. 4 shows the cropped center image.
+The first layer of the network integrate a `Cropping2D` layer for obtaining ROI. Fig. 3 shows one original center image, and Fig. 4 shows the cropped center image. Fig. 5, Fig. 6, Fig, 7, Fig, 8, and Fig. 9 shows the cropped `image_right`, `image_left`, `mirrored image_center`, `mirrored image_right`, and `mirrored image_left`, repectively.
 
 ![alt text][image2]
 Fig. 3 Original center image (`image_center`)
@@ -225,17 +225,23 @@ Fig. 3 Original center image (`image_center`)
 ![alt text][image3]
 Fig. 4 Cropped center image (`image_center`)
 
-
-
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
 ![alt text][image4]
+Fig. 5 Cropped right image (`image_right`)
+
 ![alt text][image5]
+Fig. 6 Cropped right image (`image_left`)
+
+![alt text][image6]
+Fig. 7 Cropped and mirrored center image (`mirrored image_center`)
+
+![alt text][image7]
+Fig. 8 Cropped and mirrored right image (`mirrored image_right`)
+
+![alt text][image8]
+Fig. 9 Cropped and mirrored left image (`mirrored image_left`)
+
+
+
 
 Then I repeated this process on track two in order to get more data points.
 
