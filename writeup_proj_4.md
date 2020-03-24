@@ -208,9 +208,22 @@ Fig. 2 Model visualization
 #### 3. Creation of the Training Set & Training Process
 
 
+The data I used for training network is the pre-recorded provided with the project. In order to generate enough data for training, I augment the original data to contain the following type of data:
 
+- `image_center --> angle_center`: The standard center-drive data
+- `image_right --> angle_right`: The augmented data for teaching the vehicle to recover from right side of the road. (`angle_right = angle_center - 0.3` increase the intension on turning left)
+- `image_left --> angle_left`: The augmented data for teaching the vehicle to recover from left side of the road. (`angle_left = angle_center + 0.3` increase the intension on turning right)
+- `Mirrored image_center --> -1*angle_center`: The flipped center-drive data for reusing the right-turn data on learning left-turn and vice-versa.
+- `Mirrored image_right --> -1*angle_right`: The flipped image_right for reusing the right-turn data on learning left-turn and vice-versa.
+- `Mirrored image_left --> -1*angle_left`: The flipped image_left for reusing the right-turn data on learning left-turn and vice-versa.
 
+The first layer of the network integrate a `Cropping2D` layer for obtaining ROI. Fig. 3 shows one original center image, and Fig. 4 shows the cropped center image.
 
+![alt text][image2]
+Fig. 3 Original center image (`image_center`)
+
+![alt text][image3]
+Fig. 4 Cropped center image (`image_center`)
 
 
 
