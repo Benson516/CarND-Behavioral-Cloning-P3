@@ -241,7 +241,7 @@ Fig. 8 Cropped and mirrored right image (`mirrored image_right`)
 ![alt text][image8]
 Fig. 9 Cropped and mirrored left image (`mirrored image_left`)
 
-
+ 
 
 
 Then I repeated this process on track two in order to get more data points.
