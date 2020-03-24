@@ -13,12 +13,13 @@ The goals / steps of this project are the following:
 
 [image0]: ./images/Train_valid_loss.png "Train-valid loss"
 [image1]: ./images/model.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image2]: ./images/center_original.png "Original center image"
+[image3]: ./images/center_crop.png "Cropped center image"
+[image4]: ./images/right_crop.png "Cropped right image"
+[image5]: ./images/left_crop.png "Cropped left Image"
+[image6]: ./images/center_crop_flip.png "Mirrored and cropped center image"
+[image7]: ./images/right_crop_flip.png "Mirrored and cropped right image"
+[image8]: ./images/left_crop_flip.png "Mirrored and cropped left image"
 
 ## Rubric Points
 Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
